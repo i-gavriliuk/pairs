@@ -1,10 +1,16 @@
-let gameData = null;
 const startGameMsg = 'Чтобы начать нажмите кнопку "Старт".';
 const restartGameMsg = 'Начать сначала?';
+const gameOverMsg = 'Вы выиграли!<br>Затраченное время: ';
+
 const field = document.querySelector('#field');
 const cells = field.querySelectorAll('.play-field__square');
 const startButton = document.querySelector('#start-btn');
 const modal = document.querySelector('#modal');
+const timerField = document.querySelector('#timer');
+
+let gameData = null;
+let timeCalc = null;
+let spentTime = 0;
 
 // function generates the specified number of pairs of
 // very different random hues and returns them as array
@@ -45,6 +51,7 @@ const getGameData = function initializegameDataRepresentationAndOtherData(hues) 
 const showColor = function changeColorCellToCorrespondingValue(elem, dataId) {
   const targetElement = elem;
   targetElement.style.backgroundColor = gameData[dataId].bgColor;
+  targetElement.classList.toggle('finger-cursor');
   gameData[dataId].isOpened = true;
 };
 
@@ -52,6 +59,8 @@ const showColor = function changeColorCellToCorrespondingValue(elem, dataId) {
 const closePair = function closePairCellsUnderColorsNotMatching() {
   field.querySelector(`#${gameData.firstElemOfPair}`).style.backgroundColor = '';
   field.querySelector(`#${gameData.secondElemOfPair}`).style.backgroundColor = '';
+  field.querySelector(`#${gameData.firstElemOfPair}`).classList.toggle('finger-cursor');
+  field.querySelector(`#${gameData.secondElemOfPair}`).classList.toggle('finger-cursor');
   gameData[gameData.firstElemOfPair].isOpened = false;
   gameData[gameData.secondElemOfPair].isOpened = false;
   gameData.firstElemOfPair = null;
@@ -86,7 +95,8 @@ const compareCells = function compareTwoOpenCellsColors(firstCell, secondCell) {
     gameData.firstElemOfPair = null;
     gameData.secondElemOfPair = null;
     if (gameData.requiredMatchs === 0) {
-      showModal('Вы выиграли!<br>Затраченное время: 02:56.294');
+      clearInterval(timeCalc);
+      showModal(gameOverMsg + timerField.innerText);
     }
   } else {
     gameData.closeWaiting = true;
@@ -99,7 +109,19 @@ const clearField = function clearAllCellsOfPlayingFieldFromColors(elems) {
   const allCells = elems;
   for (let i = 0; i < allCells.length; i += 1) {
     allCells[i].style.backgroundColor = '';
+    allCells[i].classList.add('finger-cursor');
   }
+};
+
+const timer = function calculatesAndDisplaysElapsedTime(time = 0) {
+  const startTime = Date.now() - time;
+  timeCalc = setInterval(() => {
+    spentTime = Date.now() - startTime;
+    const min = (Math.floor((spentTime / 60000) % 60)).toString().padStart(2, '0');
+    const sec = (Math.floor((spentTime / 1000) % 60)).toString().padStart(2, '0');
+    const msec = (Math.floor((spentTime % 1000) / 10)).toString().padStart(2, '0');
+    timerField.innerText = `${min}:${sec}.${msec}`;
+  }, 10);
 };
 
 // the function recursively paints each cell in the color assigned to it with some delay
@@ -115,6 +137,7 @@ const doVisualInit = function performVisualInitialization(elems) {
       } else {
         setTimeout(() => {
           clearField(allCells);
+          timer();
         }, 1000);
       }
     }, 50);
@@ -158,12 +181,14 @@ startButton.addEventListener('click', () => {
   if (gameData === null) {
     // clear cells and with some delay initialize game object
     clearField(cells);
+    timerField.innerText = '00:00.00';
     setTimeout(() => {
       gameData = initPlayingField();
       doVisualInit(cells);
     }, 500);
   } else {
     // otherwise, display a request to re-initialize the game or its continuation
+    clearInterval(timeCalc);
     showModal(restartGameMsg);
   }
 });
@@ -177,14 +202,19 @@ modal.addEventListener('click', (evt) => {
     if (gameData !== null && !gameData.requiredMatchs) {
       // resetting the game object
       gameData = null;
+      spentTime = 0;
     }
     modal.classList.remove('show');
+    if (spentTime !== 0) {
+      timer(spentTime);
+    }
     // if the "yes" button is clicked
   } else if (clickedItemId === 'yes') {
     // reinitialize the game
     clearField(cells);
     gameData = null;
     modal.classList.remove('show');
+    timerField.innerText = '00:00.00';
     gameData = initPlayingField();
     doVisualInit(cells);
   }
