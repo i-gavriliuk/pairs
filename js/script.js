@@ -113,6 +113,8 @@ const clearField = function clearAllCellsOfPlayingFieldFromColors(elems) {
   }
 };
 
+// the function calculates and displays the elapsed time
+// or continues calculate if it does not start from scratch
 const timer = function calculatesAndDisplaysElapsedTime(time = 0) {
   const startTime = Date.now() - time;
   timeCalc = setInterval(() => {
