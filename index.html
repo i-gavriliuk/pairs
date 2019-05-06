@@ -6,36 +6,41 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Pairs game</title>
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    * {
-      /* outline: 1px dashed #333; */
-    }
-  </style>
 </head>
 <body class="page">
   <div class="main-block">
-    <div class="play-field">
-      <div class="play-field__square cell1"></div>
-      <div class="play-field__square cell2"></div>
-      <div class="play-field__square cell3"></div>
-      <div class="play-field__square cell4"></div>
-      <div class="play-field__square cell5"></div>
-      <div class="play-field__square cell6"></div>
-      <div class="play-field__square cell7"></div>
-      <div class="play-field__square cell8"></div>
-      <div class="play-field__square cell9"></div>
-      <div class="play-field__square cell10"></div>
-      <div class="play-field__square cell11"></div>
-      <div class="play-field__square cell12"></div>
-      <div class="play-field__square cell13"></div>
-      <div class="play-field__square cell14"></div>
-      <div class="play-field__square cell15"></div>
-      <div class="play-field__square cell16"></div>
+    <div id="field" class="play-field">
+      <div id="cell1" class="play-field__square cell1"></div>
+      <div id="cell2" class="play-field__square cell2"></div>
+      <div id="cell3" class="play-field__square cell3"></div>
+      <div id="cell4" class="play-field__square cell4"></div>
+      <div id="cell5" class="play-field__square cell5"></div>
+      <div id="cell6" class="play-field__square cell6"></div>
+      <div id="cell7" class="play-field__square cell7"></div>
+      <div id="cell8" class="play-field__square cell8"></div>
+      <div id="cell9" class="play-field__square cell9"></div>
+      <div id="cell10" class="play-field__square cell10"></div>
+      <div id="cell11" class="play-field__square cell11"></div>
+      <div id="cell12" class="play-field__square cell12"></div>
+      <div id="cell13" class="play-field__square cell13"></div>
+      <div id="cell14" class="play-field__square cell14"></div>
+      <div id="cell15" class="play-field__square cell15"></div>
+      <div id="cell16" class="play-field__square cell16"></div>
     </div>
     <div class="control">
-      <button class="control__start-btn">Старт</button>
-      <div class="control__timer">01:11.347</div>
+      <button id="start-btn" class="control__start-btn" autofocus>Старт</button>
+      <output id="timer" class="control__timer">00:00.00</output>
+    </div>
+    <div id="modal" class="main-block__modal">
+      <div class="main-block__modal-content">
+        <p id="modal-msg" class="main-block__modal-msg"></p>
+        <div class="main-block__modal-control">
+          <button id="yes" class="main-block__modal-btn modal-btn__yes">Да</button>
+          <button id="cancel" class="main-block__modal-btn modal-btn__cancel" autofocus></button>
+        </div>
+      </div>
     </div>
   </div>
+  <script src="js/script.js"></script>
 </body>
 </html>
